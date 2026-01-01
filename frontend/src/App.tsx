@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { AuthProvider, LoginPage, SignupPage, ProtectedRoute } from './features/auth'
 import { GoalsPage, GoalDetailPage } from './features/goals'
+import { DashboardPage } from './features/dashboard'
 import { Layout } from './components/Layout'
 import { configureAmplify } from './lib/amplify'
 import './index.css'
@@ -41,6 +42,16 @@ function App() {
                 <ProtectedRoute>
                   <Layout>
                     <GoalDetailPage />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <DashboardPage />
                   </Layout>
                 </ProtectedRoute>
               }

@@ -4,19 +4,22 @@ project_name        = "milestone-manager"
 environment         = "prod"
 dynamodb_table_name = "milestone-manager"
 
-# Cognito（本番ドメインに置き換えてください）
+# Cognito
 cognito_callback_urls = [
-  "https://your-domain.com/"
+  "https://dup715o0rkbl.cloudfront.net/",
+  "http://localhost:5173/"
 ]
 cognito_logout_urls = [
-  "https://your-domain.com/login"
+  "https://dup715o0rkbl.cloudfront.net/login",
+  "http://localhost:5173/login"
 ]
 
-# CORS（本番ドメインに置き換えてください）
+# CORS
 cors_allowed_origins = [
-  "https://your-domain.com"
+  "https://dup715o0rkbl.cloudfront.net",
+  "http://localhost:5173"
 ]
 
-# カスタムドメイン（必要に応じて設定）
-frontend_domain     = ""  # 例: "app.your-domain.com"
-acm_certificate_arn = ""  # 例: "arn:aws:acm:us-east-1:123456789012:certificate/xxx"
+# カスタムドメイン（不要）
+frontend_domain     = ""
+acm_certificate_arn = ""

@@ -39,53 +39,53 @@ class ApiClient {
   }
 
   async getGoals(): Promise<Goal[]> {
-    return this.request<Goal[]>('/goals')
+    return this.request<Goal[]>('/api/goals')
   }
 
   async getGoal(id: string): Promise<Goal> {
-    return this.request<Goal>(`/goals/${id}`)
+    return this.request<Goal>(`/api/goals/${id}`)
   }
 
   async createGoal(data: CreateGoalInput): Promise<Goal> {
-    return this.request<Goal>('/goals', {
+    return this.request<Goal>('/api/goals', {
       method: 'POST',
       body: JSON.stringify(data),
     })
   }
 
   async updateGoal(id: string, data: UpdateGoalInput): Promise<Goal> {
-    return this.request<Goal>(`/goals/${id}`, {
+    return this.request<Goal>(`/api/goals/${id}`, {
       method: 'PUT',
       body: JSON.stringify(data),
     })
   }
 
   async deleteGoal(id: string): Promise<void> {
-    await this.request(`/goals/${id}`, {
+    await this.request(`/api/goals/${id}`, {
       method: 'DELETE',
     })
   }
 
   async getMilestones(goalId: string): Promise<Milestone[]> {
-    return this.request<Milestone[]>(`/goals/${goalId}/milestones`)
+    return this.request<Milestone[]>(`/api/goals/${goalId}/milestones`)
   }
 
   async createMilestone(goalId: string, data: CreateMilestoneInput): Promise<Milestone> {
-    return this.request<Milestone>(`/goals/${goalId}/milestones`, {
+    return this.request<Milestone>(`/api/goals/${goalId}/milestones`, {
       method: 'POST',
       body: JSON.stringify(data),
     })
   }
 
   async updateMilestone(id: string, data: UpdateMilestoneInput): Promise<Milestone> {
-    return this.request<Milestone>(`/milestones/${id}`, {
+    return this.request<Milestone>(`/api/milestones/${id}`, {
       method: 'PUT',
       body: JSON.stringify(data),
     })
   }
 
   async deleteMilestone(id: string): Promise<void> {
-    await this.request(`/milestones/${id}`, {
+    await this.request(`/api/milestones/${id}`, {
       method: 'DELETE',
     })
   }

@@ -106,15 +106,6 @@ resource "aws_cloudwatch_log_group" "lambda" {
 resource "aws_apigatewayv2_api" "main" {
   name          = "${var.project_name}-${var.environment}-api"
   protocol_type = "HTTP"
-
-  cors_configuration {
-    allow_origins     = var.allowed_origins
-    allow_methods     = ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
-    allow_headers     = ["Content-Type", "Authorization", "X-Amz-Date", "X-Api-Key"]
-    expose_headers    = ["Content-Type"]
-    max_age           = 3600
-    allow_credentials = true
-  }
 }
 
 # JWT Authorizer
@@ -146,6 +137,14 @@ resource "aws_apigatewayv2_route" "api_authenticated" {
   target             = "integrations/${aws_apigatewayv2_integration.lambda.id}"
   authorization_type = "JWT"
   authorizer_id      = aws_apigatewayv2_authorizer.cognito.id
+}
+
+# OPTIONS リクエスト（CORS プリフライト用、認証不要）
+resource "aws_apigatewayv2_route" "api_options" {
+  api_id             = aws_apigatewayv2_api.main.id
+  route_key          = "OPTIONS /api/{proxy+}"
+  target             = "integrations/${aws_apigatewayv2_integration.lambda.id}"
+  authorization_type = "NONE"
 }
 
 # ヘルスチェック（認証不要）

@@ -59,3 +59,47 @@ export interface UpdateMilestoneInput {
   status?: MilestoneStatus
   order?: number
 }
+
+// Category
+export interface Category {
+  id: string
+  userId: string
+  name: string
+  color: string
+  createdAt: string
+}
+
+export interface CreateCategoryInput {
+  name: string
+  color: string
+}
+
+export interface UpdateCategoryInput {
+  name?: string
+  color?: string
+}
+
+// Dashboard
+export interface DashboardStats {
+  totalGoals: number
+  completedGoals: number
+  inProgressGoals: number
+  totalMilestones: number
+  completedMilestones: number
+  overdueMilestones: number
+  streakDays: number
+}
+
+export interface ActivityData {
+  date: string
+  count: number
+}
+
+export interface TimelineItem {
+  id: string
+  type: 'goal' | 'milestone'
+  title: string
+  description?: string
+  completedAt: string
+  categoryId?: string
+}

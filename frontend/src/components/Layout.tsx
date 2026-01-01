@@ -6,6 +6,7 @@ import {
   UserCircleIcon,
   ArrowRightOnRectangleIcon,
   HomeIcon,
+  ChartBarIcon,
 } from '@heroicons/react/24/outline'
 import { useAuth } from '../features/auth'
 
@@ -34,10 +35,17 @@ export function Layout({ children }: LayoutProps) {
               <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
                 <Link
                   to="/"
-                  className="inline-flex items-center border-b-2 border-indigo-500 px-1 pt-1 text-sm font-medium text-gray-900"
+                  className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700"
                 >
                   <HomeIcon className="mr-1 h-4 w-4" />
                   目標一覧
+                </Link>
+                <Link
+                  to="/dashboard"
+                  className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700"
+                >
+                  <ChartBarIcon className="mr-1 h-4 w-4" />
+                  ダッシュボード
                 </Link>
               </div>
             </div>
@@ -102,6 +110,16 @@ export function Layout({ children }: LayoutProps) {
                           className={`${active ? 'bg-gray-100' : ''} block px-4 py-2 text-sm text-gray-700`}
                         >
                           目標一覧
+                        </Link>
+                      )}
+                    </Menu.Item>
+                    <Menu.Item>
+                      {({ active }) => (
+                        <Link
+                          to="/dashboard"
+                          className={`${active ? 'bg-gray-100' : ''} block px-4 py-2 text-sm text-gray-700`}
+                        >
+                          ダッシュボード
                         </Link>
                       )}
                     </Menu.Item>

@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useEffect, useState, useCallback } from 'react'
 import type { ReactNode } from 'react'
 import {
   signIn,
@@ -9,6 +9,7 @@ import {
   fetchAuthSession,
 } from 'aws-amplify/auth'
 import type { User } from '../../types'
+import { apiClient } from '../../lib/api'
 
 const USE_MOCK_AUTH = import.meta.env.DEV && !import.meta.env.VITE_COGNITO_USER_POOL_ID
 
@@ -126,7 +127,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     })
   }
 
-  async function getAccessToken(): Promise<string | null> {
+  const getAccessToken = useCallback(async (): Promise<string | null> => {
     if (USE_MOCK_AUTH) {
       return 'mock-access-token'
     }
@@ -138,7 +139,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
       console.error('Failed to get access token:', error)
       return null
     }
-  }
+  }, [])
+
+  // Set the token getter on the API client
+  useEffect(() => {
+    apiClient.setTokenGetter(getAccessToken)
+  }, [getAccessToken])
 
   const value: AuthContextType = {
     user,

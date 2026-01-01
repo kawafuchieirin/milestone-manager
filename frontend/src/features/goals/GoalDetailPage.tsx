@@ -1,6 +1,13 @@
 import { useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import { ArrowLeftIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline'
+import {
+  ArrowLeftIcon,
+  PencilIcon,
+  TrashIcon,
+  CheckCircleIcon,
+  ArrowPathIcon,
+} from '@heroicons/react/24/outline'
+import { CheckCircleIcon as CheckCircleSolidIcon } from '@heroicons/react/24/solid'
 import { useGoal, useUpdateGoal, useDeleteGoal } from './useGoals'
 import { GoalFormModal } from './GoalFormModal'
 import { MilestoneList, GanttChart, ProgressChart, useMilestones } from '../milestones'
@@ -26,6 +33,7 @@ export function GoalDetailPage() {
   const navigate = useNavigate()
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
+  const [isCompleting, setIsCompleting] = useState(false)
   const [activeTab, setActiveTab] = useState<'list' | 'gantt' | 'progress'>('list')
 
   const { data: goal, isLoading, error } = useGoal(id || '')
@@ -40,6 +48,20 @@ export function GoalDetailPage() {
       {
         onSuccess: () => {
           setIsEditModalOpen(false)
+        },
+      }
+    )
+  }
+
+  function handleToggleComplete() {
+    if (!id || !goal) return
+    const newStatus = goal.status === 'completed' ? 'in_progress' : 'completed'
+    setIsCompleting(true)
+    updateGoal.mutate(
+      { id, data: { status: newStatus } },
+      {
+        onSettled: () => {
+          setIsCompleting(false)
         },
       }
     )
@@ -104,7 +126,20 @@ export function GoalDetailPage() {
         </Link>
       </div>
 
-      <div className="rounded-lg bg-white p-6 shadow">
+      {/* Completed Banner */}
+      {goal.status === 'completed' && (
+        <div className="mb-4 rounded-lg bg-gradient-to-r from-green-500 to-emerald-600 p-4 text-white shadow-lg">
+          <div className="flex items-center gap-3">
+            <CheckCircleSolidIcon className="h-8 w-8" />
+            <div>
+              <p className="font-semibold">目標達成おめでとうございます！</p>
+              <p className="text-sm text-green-100">この目標は完了しています</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className={`rounded-lg bg-white p-6 shadow ${goal.status === 'completed' ? 'ring-2 ring-green-500' : ''}`}>
         <div className="flex items-start justify-between">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">{goal.title}</h1>
@@ -155,10 +190,43 @@ export function GoalDetailPage() {
           </div>
           <div className="mt-2 h-3 w-full overflow-hidden rounded-full bg-gray-200">
             <div
-              className="h-full rounded-full bg-indigo-600 transition-all duration-300"
+              className={`h-full rounded-full transition-all duration-300 ${
+                goal.status === 'completed' ? 'bg-green-500' : 'bg-indigo-600'
+              }`}
               style={{ width: `${progress}%` }}
             />
           </div>
+        </div>
+
+        {/* Complete Button */}
+        <div className="mt-6 border-t border-gray-100 pt-6">
+          <button
+            type="button"
+            onClick={handleToggleComplete}
+            disabled={isCompleting}
+            className={`w-full flex items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-medium transition-all ${
+              goal.status === 'completed'
+                ? 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                : 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-md hover:from-green-600 hover:to-emerald-700 hover:shadow-lg'
+            }`}
+          >
+            {isCompleting ? (
+              <>
+                <ArrowPathIcon className="h-5 w-5 animate-spin" />
+                処理中...
+              </>
+            ) : goal.status === 'completed' ? (
+              <>
+                <ArrowPathIcon className="h-5 w-5" />
+                進行中に戻す
+              </>
+            ) : (
+              <>
+                <CheckCircleIcon className="h-5 w-5" />
+                この目標を完了にする
+              </>
+            )}
+          </button>
         </div>
       </div>
 
